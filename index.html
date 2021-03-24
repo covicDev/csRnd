@@ -51,10 +51,21 @@ p#result span{
 <script src="config.class.js" ></script>
 
 <script type="text/javascript">
+
 const csRndNameSpace = {
-  version:'1.1'
+  version:'1.1',
+  tmp:$("#cls"),
+  arr:[0]
 }
-var tmp = $("#cls");
+
+class _main {
+  constructor(){
+    let cfg         = new _Config();
+    this.mpsArr     = cfg.getMapsArray();
+    this.mpsArrLen  = this.mpsArr.length;
+  }
+}
+
 var arr = [0];
 
 var frames = 0;
@@ -70,7 +81,8 @@ var myNameSpace = {
 }
 
 $(function(){
- tmp.click( async function(){
+ csRndNameSpace.tmp.click( async function(){
+        let tmp = csRndNameSpace.tmp;
         let stp = 1;
         let s = 0;
 
@@ -128,6 +140,7 @@ init();
 
 var loop;
 var looper = function(){
+  let tmp = csRndNameSpace.tmp;
   frames--;
   tmp.animate({opacity: 'show'},1600,function(){
       nts = Math.floor(Math.random()*mps+1);
