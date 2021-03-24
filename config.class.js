@@ -25,7 +25,7 @@ class _Config {
             ["BANK",        2543,    1],
             ["LAKE",        2713,    1],
             ["S.HOUSE",     2881,    1],
-            ["MILITIA",     3050,    0],
+            ["MILITIA",     3050,    1],
         //  ["NewMap",      numb,    1],
 
         ];
