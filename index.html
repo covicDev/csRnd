@@ -2,32 +2,11 @@
 <head>
 <title>For Miki :-)</title>
 
-<script src="js/jquery.js"></script>
-<link rel="stylesheet" href="css/w3.css">
+  <script src="js/jquery.js"></script>
+  <link rel="stylesheet" href="css/main.css">
 
 <style type="text/css">
-body {
-	background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
-	background-size: 400% 400%;
-	-webkit-animation: Gradient 10s ease infinite;
-	-moz-animation: Gradient 10s ease infinite;
-	animation: Gradient 10s ease infinite;
-}
-@-webkit-keyframes Gradient {
-	0%{background-position:0%50%}
-	50%{background-position:100%50%}
-	100% {background-position:0%50%}
-}
-@-moz-keyframes Gradient {
-	0%{background-position:0%50%}
-  50%{background-position:100%50%}
-	100%{background-position:0%50%}
-}
-@keyframes Gradient {
-  0%{background-position:0%50%}
-	50% {background-position:100%50%}
-	100% {background-position:0%50%}
-}
+
 .start{
   width:160px; 
   height:160px; 
@@ -41,60 +20,13 @@ body {
   cursor:pointer;
   }
 .cls:hover {
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: Shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
-@keyframes nudge {
-  0%,100% {transform: translate(0, 0);}
-  20%{transform: translate(3px, -2px);}
-  40%{transform: translate(-2px, 3px);}
-  60%{transform: translate(3px, 2px);}
-  80%{transform: translate(-2px, -3px);}
-}
-@-moz-keyframes nudge {
-  0%,100% {transform: translate(0, 0);}
-  20%{transform: translate(3px, -2px);}
-  40%{transform: translate(-2px, 3px);}
-  60%{transform: translate(3px, 2px);}
-  80%{transform: translate(-2px, -3px);}
-}
-@-webkit-keyframes nudge {
-  0%,100% {transform: translate(0, 0);}
-  20%{transform: translate(2px, -2px);}
-  40%{transform: translate(-2px, 2px);}
-  60%{transform: translate(2px, 2px);}
-  80%{transform: translate(-2px, -2px);}
-}
-@keyframes shake {
-  10%,90%{transform: translate3d(-1px, 0, 0);}
-  20%,80%{transform: translate3d(2px, 0, 0);}
-  30%,50%,70%{transform: translate3d(-3px, 0, 0);}
-  40%,60%{transform: translate3d(3px, 0, 0);}
-}
-._0{background-position:-5px -5px} /* !CSGO */            
-._1{background-position:-172px -5px} /* !Dust 2 */
-._2{background-position:-342px -5px} /* !Inferno */
-._3{background-position:-512px -5px} /* !Mirage */
-._4{background-position:-682px -5px} /* !Cache*/
-._5{background-position:-852px -5px} /* !Cobble */
-._6{background-position:-1020px -5px} /* !Overpass */
-._7{background-position:-1188px -5px} /* !Train */
-._8{background-position:-1358px -5px} /* !Nuke */
-._9{background-position:-1528px -5px} /* !Vertigo */
-._10{background-position:-1698px -5px} /* !Canals */
-._11{background-position:-1868px -5px} /* !Italy */
-._12{background-position:-2033px -5px} /* !Office */
-._13{background-position:-2203px -5px} /* !Anubis */
-._14{background-position:-2373px -5px} /* !Dust */
-._15{background-position:-2543px -5px} /* !Bank */
-._16{background-position:-2713px -5px} /* !Lake */
-._17{background-position:-2881px -5px} /* !SafeHouse */
-._18{background-position:-3050px -5px} /* !Militia */
-._s1{background-position:-888px -5px}
-._s2{background-position:-1222px -5px}
-._s3{background-position:-1777px -5px}
-._s4{background-position:-5px -5px}
+
+._0{background-position:-5px -5px} /* !CSGO */
+
 p#result{
 font-family: 'Arial Black';
 text-align:center; 
@@ -102,73 +34,125 @@ color:rgb(255, 255, 255, 0.7);
 font-size:26px; 
 font-weight:bold
 }
+p#result span{
+  font-weight:bold; 
+  color:rgb(255, 255, 255, 0.4); 
+  margin:6px
+}
+
 </style>
 </head>
 <body>
 <div class="start">
-    <p id="result">Next map <br> will be?</p>
-<div id="cls" title="Miki, kliknij i wylosuj!" class="cls _0"></div>
+  <p id="result">Next map <br> will be?<br>&nbsp;</p>
+  <div id="cls" title="Miki, kliknij i wylosuj!" class="cls _0"></div>
 </div>
+
+<script src="config.class.js" ></script>
+
 <script type="text/javascript">
-
-const globalNameSpace = {
-  version:"1.1",
+const csRndNameSpace = {
+  version:'1.1'
 }
-
 var tmp = $("#cls");
 var arr = [0];
-var mps = 18; //ilość map
+
+var frames = 0;
+var speed = 130;
+
+var cfg   = new _Config();
+var mArr  = cfg.getMapsArray();
+var mps   = cfg.getMapsArray().length;
+var n = 0;
+
+var myNameSpace = {
+  mArrx  :cfg.getMapsArray()
+}
+
 $(function(){
-	tmp.click(function(){
-        let num = 0;
+ tmp.click( async function(){
         let stp = 1;
-        if(arr.length<=mps){
+        let s = 0;
+
+            for(let a=0; a<mps; a++) if(mArr[a][2]==0)s++;
+
+        if(arr.length<=mps-s){
             while(stp){
-            num = Math.floor(Math.random()*mps+1);
-            for (let i=0; i<arr.length; i++)
-                if (arr[i]==num&&(stp=1))break;
+            n = Math.floor(Math.random()*mps+1);
+            for (let i=0; i<arr.length; i++){
+                if (((mArr[n-1][2]===0)||(arr[i]===n))&&(stp=1))break;
                 else stp=0;
-        }
-        arr.push(num);
-        console.log("Lucky number is:" + num);
+            }
+          }
+        arr.push(n);
+        console.log("Lucky number is: "+n+" ("+mArr[n-1][0]+")");
+
         // show part
-        $("#result").html("Choosing<br><span>wisely...</span>");
+        $("#result").html("Choosing<br><span>wisely...</span><br>&nbsp;");
         tmp.css("-webkit-filter", "blur(6px)");
-        tmp.css("-webkit-animation","nudge 0s ease infinite alternate");
-        tmp.css("animation","nudge 0s ease infinite alternate");
-        tmp.css("-moz-animation","nudge 0s ease infinite alternate");
+        await sleep(300);
+        tmp.css("-webkit-animation","Nudge 0s ease infinite alternate");
+        tmp.css("animation","Nudge 0s ease infinite alternate");
+        tmp.css("-moz-animation","Nudge 0s ease infinite alternate");
+        tmp.removeClass();
 		    tmp.attr("class","cls");
 		    tmp.css('cursor','default');
-		tmp.animate({left: '+2px'}, 100,function(){
-			tmp.addClass("_s1");
-		}).delay(200).animate({top:'-2px'},100,function(){
-			tmp.removeClass("_s1").addClass("_s2");
-		}).delay(140).animate({opacity: 'show'},600,function(){
-			tmp.removeClass("_s2").addClass("_s3");
-		}).delay(100).animate({opacity: 'show'},600,function(){
-			tmp.removeClass("_s3").addClass("_s4");
-		}).delay(70).animate({left:'-2px',top:'2px'},100,function(){
-			tmp.removeClass("_s4").addClass("_"+num);
-			tmp.css('cursor','pointer');
-      $("#result").html("Choose was made!");
-      tmp.css("-webkit-filter", "blur(0px)");
-      tmp.css("-webkit-animation","nudge 5s ease infinite alternate");
-      tmp.css("animation","nudge 5s ease infinite alternate");
-      tmp.css("-moz-animation","nudge 5s ease infinite alternate");
-		});
+
+        frames = 13;
+        speed = 130;
+        looper();
+
       } else {
-          $("#result").html("You made<br><span>all maps!</span>");
+          $("#result").html("You made<br><span>all maps!</span><br>Rematch?");
+          tmp.removeClass();
+          
           tmp.attr("class","cls");
-          tmp.addClass("_0");
+          tmp.css({"class":"_tmp","background-position":"-5px -5px"});
+          tmp.css("-webkit-filter", "blur(6px)");
+          await sleep(1000);
+          tmp.css("-webkit-filter", "blur(0px)");
+          tmp.addClass("_tmp");
+          arr = [0];
         }
         //!
 	});
 });
 
+var nts;
+
 function init(){
-  console.log("Aplication Version "+globalNameSpace.version);
+  nts = Math.floor(Math.random()*mps+1);
+  console.log("Aplication Version "+csRndNameSpace.version);
 }
 init();
+
+var loop;
+var looper = function(){
+  frames--;
+  tmp.animate({opacity: 'show'},1600,function(){
+      nts = Math.floor(Math.random()*mps+1);
+      let px = mArr[nts-1][1];
+      tmp.css({"class":"_tmp","background-position":"-"+px+"px -5px"});
+      tmp.addClass("_tmp");
+		});
+
+  if(frames>0)
+	loop = setTimeout(looper, speed-1);
+  else {
+      $("#result").html("Choice was made!<br><span>"+mArr[n-1][0]+"</span>");
+      tmp.css({"class":"_tmp","background-position":"-"+mArr[n-1][1]+"px -5px"});
+      tmp.addClass("_tmp");
+      tmp.css('cursor','pointer');
+      tmp.css("-webkit-filter", "blur(0px)");
+      tmp.css("-webkit-animation","Nudge 5s ease infinite alternate");
+      tmp.css("animation","Nudge 5s ease infinite alternate");
+      tmp.css("-moz-animation","Nudge 5s ease infinite alternate");
+  }
+}
+
+function sleep(ms) {
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
 
 </script>
 </body>
